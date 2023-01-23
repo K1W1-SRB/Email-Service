@@ -9,12 +9,40 @@ import PeopleIcon from "@mui/icons-material/People";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Checkbox, IconButton } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import "./EmailList.css";
 import Section from "./Section";
 import EmailRow from "./EmailRow";
+import { useState } from "react";
+import { db } from "./firebase";
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
 
 function EmailList() {
+  const [emails, setEmails] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const querySnapshot = await getDocs(collection(db, "emails"));
+      // console.log(querySnapshot.docs);
+      querySnapshot.forEach((querySnapshot) => {
+        setEmails(
+          querySnapshot.forEach((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+        );
+      });
+    }
+    fetchData();
+    console.log(emails);
+  }, []);
+
   return (
     <div className="emailList">
       <div className="emailList__settings">
@@ -53,6 +81,9 @@ function EmailList() {
       </div>
 
       <div className="emailList__list">
+        {emails.map((email) => {
+          <EmailRow title={emails.title} />;
+        })}
         <EmailRow
           title="Twitch"
           subject="Hey fellow Cunt!!"

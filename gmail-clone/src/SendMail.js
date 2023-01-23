@@ -6,7 +6,12 @@ import { useForm } from "react-hook-form";
 import { closeSendMessage } from "./features/mailSlice";
 import { useDispatch } from "react-redux";
 import { db } from "./firebase";
-import firebase from "firebase";
+import {
+  serverTimestamp,
+  getFirestore,
+  collection,
+  addDoc,
+} from "firebase/firestore";
 
 function SendMail() {
   const dispatch = useDispatch();
@@ -14,18 +19,29 @@ function SendMail() {
   const {
     register,
     handleSubmit,
-    watch,
+
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    db.collection("emails").add({
-      to: data.to,
-      subject: data.subject,
-      message: data.message,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+  const onSubmit = (Formdata) => {
+    console.log(Formdata);
+
+    const data = {
+      to: Formdata.name,
+      subject: Formdata.subject,
+      message: Formdata.message,
+      timestamp: serverTimestamp(),
+    };
+
+    const dbRef = collection(db, "emails");
+
+    addDoc(dbRef, data)
+      .then((docref) => {
+        console.log("DOcument has been added successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     dispatch(closeSendMessage());
   };
 
@@ -43,14 +59,14 @@ function SendMail() {
           name="to"
           placeholder="to"
           type="email"
-          {...register("name value", { required: true })}
+          {...register("name", { required: true })}
         />
         {errors.to && <p className="sendMail__error">To is Required</p>}
         <input
           name="subject"
           placeholder="subject"
           type="text"
-          {...register("subject value", { required: true })}
+          {...register("subject", { required: true })}
         />
         {errors.subject && (
           <p className="sendMail__error">Subject is Required</p>
@@ -60,7 +76,7 @@ function SendMail() {
           placeholder="Message..."
           type="text"
           className="sendMail__message"
-          {...register("message value", { required: true })}
+          {...register("message", { required: true })}
         />
         {errors.message && (
           <p className="sendMail__error">Message is Required</p>
