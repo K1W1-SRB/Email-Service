@@ -29,6 +29,8 @@ function EmailList() {
     getData();
   }, []);
 
+  console.log(emails);
+
   return (
     <div className="emailList">
       <div className="emailList__settings">
@@ -67,7 +69,7 @@ function EmailList() {
       </div>
 
       <div className="emailList__list">
-        {emails.map((email) => <EmailRow key={email.id} title={email.to} subject={email.subject} description={email.message} time={email.timestamp} />)}
+        {emails.map((email) => <EmailRow key={email.id} title={email.to} subject={email.subject} description={email.message} time={email.timestamp.seconds} />)}
         {/* <EmailRow
           title="Twitch"
           subject="Hey fellow Cunt!!"
