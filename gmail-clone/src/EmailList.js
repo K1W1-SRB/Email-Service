@@ -14,8 +14,8 @@ import "./EmailList.css";
 import Section from "./Section";
 import EmailRow from "./EmailRow";
 import { useState } from "react";
-import { collection,  getDocs } from "firebase/firestore";
-import { db } from "./firebase"
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebase";
 
 function EmailList() {
   const [emails, setEmails] = useState([]);
@@ -23,9 +23,9 @@ function EmailList() {
     const getData = async () => {
       const emailsData = await getDocs(collection(db, "emails"));
       // console.log(emailsData)
-      setEmails(emailsData.docs.map((doc) => ({...doc.data(), id: doc.id})));
+      setEmails(emailsData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       // console.log(emailsData)
-    }
+    };
     getData();
   }, []);
 
@@ -69,13 +69,15 @@ function EmailList() {
       </div>
 
       <div className="emailList__list">
-        {emails.map((email) => <EmailRow key={email.id} title={email.to} subject={email.subject} description={email.message} time={email.timestamp.seconds} />)}
-        {/* <EmailRow
-          title="Twitch"
-          subject="Hey fellow Cunt!!"
-          description="this is a hate thread"
-          time="4.20pm"
-        /> */}
+        {emails.map((email) => (
+          <EmailRow
+            key={email.id}
+            title={email.to}
+            subject={email.subject}
+            description={email.message}
+            time={email.timestamp.seconds}
+          />
+        ))}
       </div>
     </div>
   );
