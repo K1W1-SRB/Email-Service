@@ -4,13 +4,13 @@ import { useDispatch } from "react-redux";
 import { login } from "./features/userSlice";
 import { auth, provider } from "./firebase";
 import "./login.css";
+import { signInWithPopup } from "firebase/auth";
 
 function Login() {
   const dispatch = useDispatch;
 
   const signIn = () => {
-    auth
-      .signInWithPopup(provider)
+    signInWithPopup(auth, provider)
       .then(({ user }) => {
         dispatch(
           login({
