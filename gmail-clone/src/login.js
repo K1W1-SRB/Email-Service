@@ -7,7 +7,7 @@ import "./login.css";
 import { signInWithPopup } from "firebase/auth";
 
 function Login() {
-  const dispatch = useDispatch;
+  const dispatch = useDispatch();
 
   const signIn = () => {
     signInWithPopup(auth, provider)
@@ -22,6 +22,7 @@ function Login() {
       })
       .catch((error) => alert(error.message));
   };
+
   return (
     <div className="login">
       <div className="login__container">
